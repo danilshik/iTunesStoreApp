@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">ITunesApp</string>
+    <string name="error_text">Что-то пошло не так. Попробуйте еще раз</string>
+    <string name="result_empty">Ничего не найдено</string>
 </resources>

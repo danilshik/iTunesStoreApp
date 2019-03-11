@@ -3,6 +3,7 @@ package com.example.itunesapp;
 import com.google.gson.Gson;
 
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiUtils {
@@ -16,6 +17,7 @@ public class ApiUtils {
             retrofit = new Retrofit.Builder()
                     .baseUrl(apiUrl)
                     .addConverterFactory(GsonConverterFactory.create())
+                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .build();
         }
 

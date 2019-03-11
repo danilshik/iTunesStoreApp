@@ -36,8 +36,10 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultHolder> {
         return mResultList.size();
     }
 
-    public void addData(List<Result> results){
-        mResultList.clear();
+    public void addData(List<Result> results, boolean refresh){
+        if(refresh){
+            mResultList.clear();
+        }
         mResultList.addAll(results);
         notifyDataSetChanged();
     }
