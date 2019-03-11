@@ -1,5 +1,6 @@
 package com.example.itunesapp.result;
 
+
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -36,6 +37,7 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultHolder> {
     }
 
     public void addData(List<Result> results){
+        mResultList.clear();
         mResultList.addAll(results);
         notifyDataSetChanged();
     }
