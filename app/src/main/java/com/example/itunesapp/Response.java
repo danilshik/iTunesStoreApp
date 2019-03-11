@@ -1,4 +1,6 @@
-package com.example.itunesapp.result;
+package com.example.itunesapp;
+
+import com.example.itunesapp.result.Result;
 
 import java.util.List;
 

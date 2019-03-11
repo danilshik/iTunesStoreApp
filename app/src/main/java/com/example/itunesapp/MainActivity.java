@@ -3,6 +3,8 @@ package com.example.itunesapp;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import com.example.itunesapp.result.ResultFragment;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -14,7 +16,7 @@ public class MainActivity extends AppCompatActivity {
         if(savedInstanceState == null) {
             getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.container, RecyclerFragment.newInstance())
+                    .replace(R.id.container, ResultFragment.newInstance())
                     .commit();
         }
     }
