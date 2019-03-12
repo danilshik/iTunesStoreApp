@@ -1,5 +1,6 @@
-package com.example.itunesapp;
+package com.example.itunesapp.utils;
 
+import com.example.itunesapp.APIService;
 import com.google.gson.Gson;
 
 import retrofit2.Retrofit;

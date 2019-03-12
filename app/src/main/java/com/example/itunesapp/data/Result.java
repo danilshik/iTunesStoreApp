@@ -1,4 +1,4 @@
-package com.example.itunesapp.result;
+package com.example.itunesapp.data;
 
 public class Result
 {

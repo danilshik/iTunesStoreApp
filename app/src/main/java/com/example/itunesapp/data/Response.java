@@ -1,6 +1,6 @@
-package com.example.itunesapp;
+package com.example.itunesapp.data;
 
-import com.example.itunesapp.result.Result;
+import com.example.itunesapp.data.Result;
 
 import java.util.List;
 

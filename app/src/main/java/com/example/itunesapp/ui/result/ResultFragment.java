@@ -1,45 +1,33 @@
-package com.example.itunesapp.result;
+package com.example.itunesapp.ui.result;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.itunesapp.ApiUtils;
 import com.example.itunesapp.R;
-import com.example.itunesapp.Response;
+import com.example.itunesapp.common.PresenterFragment;
+import com.example.itunesapp.data.Result;
 
 import java.util.List;
 
-
-import io.reactivex.Scheduler;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Action;
-import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
-import retrofit2.Call;
-import retrofit2.Callback;
-
-public class ResultFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+public class ResultFragment extends PresenterFragment<ResultsPresenter> implements SwipeRefreshLayout.OnRefreshListener, ResultsView {
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mRecycler;
     private EditText mSearchETV;
     private final ResultAdapter mResultAdapter = new ResultAdapter();
     private View mErrorView;
     private View mListEmptyView;
+    private ResultsPresenter mPresenter;
 
 
     public static ResultFragment newInstance() {
@@ -69,7 +57,7 @@ public class ResultFragment extends Fragment implements SwipeRefreshLayout.OnRef
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 String searchText = s.toString();
-                getResult(searchText);
+                mPresenter.getResults(searchText);
 
             }
 
@@ -85,62 +73,36 @@ public class ResultFragment extends Fragment implements SwipeRefreshLayout.OnRef
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        mPresenter = new ResultsPresenter(this);
         mRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecycler.setAdapter(mResultAdapter);
         mSwipeRefreshLayout.setOnRefreshListener(this);
     }
 
-    public void getResult(String textSearch) {
-        ApiUtils.getApi()
-                .getResponse(textSearch)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe(disposable -> mSwipeRefreshLayout.setRefreshing(true))
-                .doFinally(() -> mSwipeRefreshLayout.setRefreshing(false))
-                .subscribe(
-                        response -> showData(response.getResults()),
-                        throwable -> showError()
-                );
-
-    }
-
-
-
     @Override
     public void onRefresh() {
-        mSwipeRefreshLayout.post(new Runnable() {
-            @Override
-            public void run() {
-
-
-
-                String searchText = mSearchETV.getText().toString();
-                if(!searchText.isEmpty()){
-                    getResult(searchText);
-                }
-                else{
-                    Toast.makeText(getContext(), "Строка поиска пуста. Введите запрос", Toast.LENGTH_SHORT).show();
-                }
-                if(mSwipeRefreshLayout.isRefreshing()){
-                    mSwipeRefreshLayout.setRefreshing(false);
-                }
-
+        mSwipeRefreshLayout.post(() -> {
+            String searchText = mSearchETV.getText().toString();
+            if(!searchText.isEmpty()){
+                mPresenter.getResults(searchText);
+            }
+            else{
+                Toast.makeText(getContext(), getString(R.string.search_empty), Toast.LENGTH_SHORT).show();
+            }
+            if(mSwipeRefreshLayout.isRefreshing()){
+                mSwipeRefreshLayout.setRefreshing(false);
             }
         });
-
-
-
     }
 
-    private void showError() {
-        mErrorView.setVisibility(View.VISIBLE);
-        mListEmptyView.setVisibility(View.GONE);
-        mRecycler.setVisibility(View.GONE);
+    @Override
+    protected ResultsPresenter getPresenter() {
+        return mPresenter;
     }
 
-    private void showData(List<Result> mResultList) {
-        Log.d("addData", String.valueOf(mResultList.size()));
-        if(mResultList.size() == 0){
+    @Override
+    public void showResults(List<Result> resultList) {
+        if(resultList.size() == 0){
             mListEmptyView.setVisibility(View.VISIBLE);
             mRecycler.setVisibility(View.GONE);
         }
@@ -148,7 +110,30 @@ public class ResultFragment extends Fragment implements SwipeRefreshLayout.OnRef
             mListEmptyView.setVisibility(View.GONE);
             mRecycler.setVisibility(View.VISIBLE);
         }
-        mResultAdapter.addData(mResultList, true);
+        mResultAdapter.addData(resultList, true);
         mErrorView.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showRefresh() {
+        mSwipeRefreshLayout.setRefreshing(true);
+    }
+
+    @Override
+    public void hideRefresh() {
+        mSwipeRefreshLayout.setRefreshing(false);
+    }
+
+    @Override
+    public void showError() {
+        mErrorView.setVisibility(View.VISIBLE);
+        mListEmptyView.setVisibility(View.GONE);
+        mRecycler.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onDetach() {
+        mPresenter = null;
+        super.onDetach();
     }
 }

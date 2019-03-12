@@ -1,4 +1,4 @@
-package com.example.itunesapp.result;
+package com.example.itunesapp.ui.result;
 
 
 import android.support.annotation.NonNull;
@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.itunesapp.R;
+import com.example.itunesapp.data.Result;
 
 import java.util.ArrayList;
 import java.util.List;

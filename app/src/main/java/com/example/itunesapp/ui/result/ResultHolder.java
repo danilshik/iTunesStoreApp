@@ -1,4 +1,4 @@
-package com.example.itunesapp.result;
+package com.example.itunesapp.ui.result;
 
 
 import android.net.Uri;
@@ -8,9 +8,8 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.example.itunesapp.R;
+import com.example.itunesapp.data.Result;
 import com.facebook.drawee.view.SimpleDraweeView;
-
-import org.w3c.dom.Text;
 
 public class ResultHolder extends RecyclerView.ViewHolder {
     private TextView mArtistName;
