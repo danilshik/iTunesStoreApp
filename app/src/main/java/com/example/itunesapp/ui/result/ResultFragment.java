@@ -14,21 +14,33 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.arellomobile.mvp.presenter.InjectPresenter;
+import com.arellomobile.mvp.presenter.ProvidePresenter;
 import com.example.itunesapp.R;
 import com.example.itunesapp.common.PresenterFragment;
 import com.example.itunesapp.data.Result;
 
 import java.util.List;
 
-public class ResultFragment extends PresenterFragment<ResultsPresenter> implements SwipeRefreshLayout.OnRefreshListener, ResultsView {
+public class ResultFragment extends PresenterFragment implements SwipeRefreshLayout.OnRefreshListener, ResultsView {
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mRecycler;
     private EditText mSearchETV;
     private final ResultAdapter mResultAdapter = new ResultAdapter();
     private View mErrorView;
     private View mListEmptyView;
-    private ResultsPresenter mPresenter;
 
+    @InjectPresenter
+    ResultsPresenter mPresenter;
+
+    @ProvidePresenter
+    ResultsPresenter providePresenter(){
+        return new ResultsPresenter(this);
+    }
+    @Override
+    protected ResultsPresenter getPresenter() {
+        return mPresenter;
+    }
 
     public static ResultFragment newInstance() {
         return new ResultFragment();
@@ -73,7 +85,7 @@ public class ResultFragment extends PresenterFragment<ResultsPresenter> implemen
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mPresenter = new ResultsPresenter(this);
+
         mRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecycler.setAdapter(mResultAdapter);
         mSwipeRefreshLayout.setOnRefreshListener(this);
@@ -95,10 +107,7 @@ public class ResultFragment extends PresenterFragment<ResultsPresenter> implemen
         });
     }
 
-    @Override
-    protected ResultsPresenter getPresenter() {
-        return mPresenter;
-    }
+
 
     @Override
     public void showResults(List<Result> resultList) {

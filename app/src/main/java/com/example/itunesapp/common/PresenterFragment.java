@@ -1,9 +1,8 @@
 package com.example.itunesapp.common;
+import com.arellomobile.mvp.MvpAppCompatFragment;
 
-import android.support.v4.app.Fragment;
-
-public abstract class PresenterFragment<P extends BasePresenter> extends Fragment {
-    protected abstract P getPresenter();
+public abstract class PresenterFragment extends MvpAppCompatFragment {
+    protected abstract BasePresenter getPresenter();
 
     @Override
     public void onDetach() {

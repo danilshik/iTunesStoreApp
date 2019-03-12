@@ -1,12 +1,14 @@
 package com.example.itunesapp.ui.result;
 
+import com.arellomobile.mvp.InjectViewState;
 import com.example.itunesapp.utils.ApiUtils;
 import com.example.itunesapp.common.BasePresenter;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-public class ResultsPresenter extends BasePresenter {
+@InjectViewState
+public class ResultsPresenter extends BasePresenter<ResultsView> {
 
     private ResultsView mView;
 
